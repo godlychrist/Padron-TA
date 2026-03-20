@@ -1,0 +1,1 @@
+const dios = 5;
