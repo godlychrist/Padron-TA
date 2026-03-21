@@ -1,9 +1,10 @@
 {
   "name": "ticoautos-padronelectoral",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Microservicio de Identidad - TicoAutos",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,8 +12,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "moongose": "^1.0.0"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0"
   }
 }
