@@ -11,27 +11,35 @@ mongoose.connect(mongoURI)
     .catch(err => console.error('❌ Error de conexión:', err));
 
 // Esquema simple para la colección de Cédulas
-const CedulaSchema = new mongoose.Schema({
-    cedula: String,
-    nombre: String
-}, { collection: 'Cedulas' });
+const CedulaSchema = new mongoose.Schema({}, { collection: 'Cedulas', strict: false });
 
 const Cedula = mongoose.model('Cedula', CedulaSchema);
 
 app.get('/api/user/:cedula', async (req, res) => {
     try {
         const { cedula } = req.params;
-        const result = await Cedula.findOne({ cedula: cedula });
+        console.log(`Buscando cédula: ${cedula} (tipo: ${typeof cedula})`);
+        
+        const result = await Cedula.findOne({
+            $or: [
+                { cedula: cedula },
+                { cedula: String(cedula) },
+                { cedula: Number(cedula) }
+            ]
+        });
 
         if (!result) {
+            console.log("Cédula no encontrada en el padrón");
             return res.status(404).json({ error: 'La cedula no existe en el padrón' });
         }
 
+        console.log("Cédula encontrada:", result);
         res.json({
             nombre: result.nombre,
             cedula: result.cedula
         });
     } catch (err) {
+        console.error("Error en el API de padrón:", err);
         res.status(500).json({ error: 'Error interno del servidor de identidad' });
     }
 });
