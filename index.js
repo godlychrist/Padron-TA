@@ -11,7 +11,7 @@ mongoose.connect(mongoURI)
     .catch(err => console.error('❌ Error de conexión:', err));
 
 // --- ESQUEMA (Fusión) ---
-// Definimos los campos de Cris para orden, pero dejamos strict: false por si hay campos extra
+// Usamos los campos definidos para orden, pero con strict: false para flexibilidad.
 const CedulaSchema = new mongoose.Schema({
     cedula: String,
     nombre: String
@@ -24,7 +24,7 @@ app.get('/api/user/:cedula', async (req, res) => {
         const { cedula } = req.params;
         
         // --- BÚSQUEDA ROBUSTA (Tu versión) ---
-        // Esto es mejor porque busca si la cédula es Texto o Número en la DB
+        // Buscamos por texto y por número para que nunca falle.
         console.log(`Buscando cédula: ${cedula} (tipo: ${typeof cedula})`);
         
         const result = await Cedula.findOne({
