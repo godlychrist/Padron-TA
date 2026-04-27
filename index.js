@@ -10,14 +10,21 @@ mongoose.connect(mongoURI)
     .then(() => console.log('✅ Conexión exitosa a Mongo [DB Cedulas]'))
     .catch(err => console.error('❌ Error de conexión:', err));
 
-// Esquema simple para la colección de Cédulas
-const CedulaSchema = new mongoose.Schema({}, { collection: 'Cedulas', strict: false });
+// --- ESQUEMA (Fusión) ---
+// Definimos los campos de Cris para orden, pero dejamos strict: false por si hay campos extra
+const CedulaSchema = new mongoose.Schema({
+    cedula: String,
+    nombre: String
+}, { collection: 'Cedulas', strict: false });
 
 const Cedula = mongoose.model('Cedula', CedulaSchema);
 
 app.get('/api/user/:cedula', async (req, res) => {
     try {
         const { cedula } = req.params;
+        
+        // --- BÚSQUEDA ROBUSTA (Tu versión) ---
+        // Esto es mejor porque busca si la cédula es Texto o Número en la DB
         console.log(`Buscando cédula: ${cedula} (tipo: ${typeof cedula})`);
         
         const result = await Cedula.findOne({
@@ -33,7 +40,8 @@ app.get('/api/user/:cedula', async (req, res) => {
             return res.status(404).json({ error: 'La cedula no existe en el padrón' });
         }
 
-        console.log("Cédula encontrada:", result);
+        console.log("Cédula encontrada:", result.nombre);
+
         res.json({
             nombre: result.nombre,
             cedula: result.cedula
